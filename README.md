@@ -11,8 +11,7 @@ pytorch>=0.4
 
 ## Run
 
-The MLP and CNN models are produced by:
-> python [main_nn.py](main_nn.py)
+
 
 Federated learning with MLP and CNN is produced by:
 > python [main_fed.py](main_fed.py)
