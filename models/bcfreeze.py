@@ -34,7 +34,9 @@ def bcfreeze(w_locals, net_glob, args):
         w_locals_k = [w_local[key] for w_local in w_locals]
         w_glob_k = w_glob[key]
         if key in args.bc_layers:
+            print("Freeze layer: ", key)
             w_glob[key] = flame_layers(w_locals_k, w_glob_k, args)
         else:
+            print("Average layer: ", key)
             w_glob[key] = fedavg_layers(w_locals_k, w_glob_k)
     return w_glob

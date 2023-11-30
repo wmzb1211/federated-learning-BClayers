@@ -89,6 +89,7 @@ if __name__ == '__main__':
             if 'weight' in key:
                 layers_list.append(key)
         args.bc_layers = random.sample(layers_list, int(len(layers_list) * 0.5))
+        print("Attack on layers: ", args.bc_layers)
 
     for iter in range(args.epochs):
         loss_locals = []
