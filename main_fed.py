@@ -128,6 +128,11 @@ if __name__ == '__main__':
         loss_avg = sum(loss_locals) / len(loss_locals)
         print('Round {:3d}, Average loss {:.3f}'.format(iter, loss_avg))
         loss_train.append(loss_avg)
+        acc_test, loss_test, back_accu = test_img(net_glob, dataset_test, args, test_backdoor=True)
+        print("Testing accuracy: {:.2f}".format(acc_test))
+        print("Testing backdoor accuracy: {:.2f}".format(back_accu))
+
+
 
     # plot loss curve
     plt.figure()
@@ -137,8 +142,8 @@ if __name__ == '__main__':
 
     # testing
     net_glob.eval()
-    acc_train, loss_train = test_img(net_glob, dataset_train, args)
-    acc_test, loss_test = test_img(net_glob, dataset_test, args)
+    acc_train, loss_train, back_accu= test_img(net_glob, dataset_train, args, test_backdoor=True)
+    acc_test, loss_test, back_accu = test_img(net_glob, dataset_test, args, test_backdoor=True)
     print("Training accuracy: {:.2f}".format(acc_train))
     print("Testing accuracy: {:.2f}".format(acc_test))
 
