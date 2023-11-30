@@ -109,11 +109,11 @@ if __name__ == '__main__':
                 w, loss = local.train_attack(net=copy.deepcopy(net_glob).to(args.device), args=args)
             else:
                 w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
-                if args.all_clients:
-                    w_locals[idx] = copy.deepcopy(w)
-                else:
-                    w_locals.append(copy.deepcopy(w))
-                loss_locals.append(copy.deepcopy(loss))
+            if args.all_clients:
+                w_locals[idx] = copy.deepcopy(w)
+            else:
+                w_locals.append(copy.deepcopy(w))
+            loss_locals.append(copy.deepcopy(loss))
         # update global weights
         if args.defense == 'bcfreeze':
             w_glob = bcfreeze(w_locals, net_glob, args)
