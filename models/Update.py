@@ -32,7 +32,7 @@ class LocalUpdate(object):
         self.loss_func = nn.CrossEntropyLoss()
         self.selected_clients = []
         self.ldr_train = DataLoader(DatasetSplit(dataset, idxs), batch_size=self.args.local_bs, shuffle=True)
-        self.poison_frac = args.poison_frac
+        self.poison_frac = args.attack_frac
         self.attack_label = args.attack_label
         self.attack_goal = args.attack_goal
         self.attack_method = args.attack_method
