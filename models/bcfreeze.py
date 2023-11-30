@@ -3,17 +3,26 @@ import torch
 import numpy as np
 from utils.flame_layers import flame_layers
 
+# def fedavg_layers(w_locals_k, net_glob_k):
+#     '''
+#     :param w_locals: list of state_dict, 代表各个client的本地模型参数
+#     :param net_glob: model, 代表global model
+#     :return:
+#     '''
+#     for key, value in net_glob_k.items():
+#         for w_local in w_locals_k:
+#             value += w_local[key] / len(w_locals_k)
+#     return net_glob_k
 def fedavg_layers(w_locals_k, net_glob_k):
     '''
     :param w_locals: list of state_dict, 代表各个client的本地模型参数
     :param net_glob: model, 代表global model
     :return:
     '''
-    for key, value in net_glob_k.items():
-        for w_local in w_locals_k:
-            value += w_local[key] / len(w_locals_k)
-    return net_glob_k
-
+    value = net_glob_k
+    for w_local in w_locals_k:
+        value += w_local / len(w_locals_k)
+    return value
 def bcfreeze(w_locals, net_glob, args):
     '''
     :param w_locals: list of state_dict, 代表各个client的本地模型参数

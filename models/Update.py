@@ -35,7 +35,7 @@ class LocalUpdate(object):
         self.poison_frac = args.attack_frac
         self.attack_label = args.attack_label
         self.attack_goal = args.attack_goal
-        self.attack_method = args.attack_method
+        self.attack_method = args.attack
 
     def train(self, net):
         net.train()
@@ -88,7 +88,7 @@ class LocalUpdate(object):
                 for xx in range(len(bad_data)):
                     if bad_label[xx]!= self.attack_goal:  # no in task
                         continue  # jump
-                    bad_label[xx] = self.attack_label
+                    bad_label[xx] = torch.tensor(self.attack_label, dtype=torch.long)
                     bad_data[xx] = self.add_trigger(bad_data[xx])
                     images = torch.cat((images, bad_data[xx].unsqueeze(0)), dim=0)
                     labels = torch.cat((labels, bad_label[xx].unsqueeze(0)))
@@ -97,9 +97,9 @@ class LocalUpdate(object):
                 num_goal_label = len(labels[labels==self.attack_goal])
                 counter = 0
                 for xx in range(len(images)):
-                    if labels[xx] != 0:
+                    if labels[xx] != torch.tensor(0, dtype=torch.long):
                         continue
-                    labels[xx] = self.attack_label
+                    labels[xx] = torch.tensor(self.attack_label, dtype=torch.long)
                     # images[xx][:, 0:5, 0:5] = torch.max(images[xx])
                     images[xx] = self.add_trigger(images[xx])
                     counter += 1

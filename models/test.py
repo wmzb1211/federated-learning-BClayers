@@ -86,19 +86,13 @@ def test_img(net_g, datatest, args, test_backdoor=False):
                 if test_or_not(args, target[k]):  # one2one need test
                     data[k] = add_trigger(args,data[k], test=True)
                     save_img(data[k])
-                    target[k] = args.attack_label
+                    target[k] = torch.tensor(args.attack_label, device=target.device)
                     back_num += 1
                 else:
                     target[k] = -1
             log_probs = net_g(data)
             y_pred = log_probs.data.max(1, keepdim=True)[1]
-            if args.defence == 'flip':
-                soft_max_probs = torch.nn.functional.softmax(log_probs.data, dim=1)
-                pred_confidence = torch.max(soft_max_probs, dim=1)
-                x = torch.where(pred_confidence.values > 0.4,pred_confidence.indices, -2)
-                back_correct += x.eq(target.data.view_as(x)).long().cpu().sum()
-            else:
-                back_correct += y_pred.eq(target.data.view_as(y_pred)).long().cpu().sum()
+            back_correct += y_pred.eq(target.data.view_as(y_pred)).long().cpu().sum()
     test_loss /= len(data_loader.dataset)
     accuracy = 100.00 * correct / len(data_loader.dataset)
     if args.verbose:
