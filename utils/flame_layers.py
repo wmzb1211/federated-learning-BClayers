@@ -20,8 +20,8 @@ def flame_layers(w_locals_k: list, w_glob_k: dict, args):
     # w_locals_k_total_temp = w_locals_k_total_temp.reshape(w_locals_k_total_temp.shape[0], -1)
     # w_locals_k_total_temp = np.array(w_locals_k_total_temp, dtype=np.double)
     w_locals_k_total = torch.stack([w_locals_k[i].view(-1) for i in range(num_clients)])
-    w_locals_k_total_temp = w_locals_k_total.cpu().numpy()
-    w_locals_k_total_temp = np.array(w_locals_k_total_temp, dtype=np.double)
+    w_locals_k_total_temp = w_locals_k_total.cpu()
+    # w_locals_k_total_temp = np.array(w_locals_k_total_temp, dtype=np.double)
     clusterer.fit(w_locals_k_total_temp)
     benign_cluster = []
     if clusterer.labels_.max() < 0:
