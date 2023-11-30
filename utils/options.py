@@ -37,5 +37,19 @@ def args_parser():
     parser.add_argument('--verbose', action='store_true', help='verbose print')
     parser.add_argument('--seed', type=int, default=1, help='random seed (default: 1)')
     parser.add_argument('--all_clients', action='store_true', help='aggregation over all clients')
+
+    # attack arguments
+    parser.add_argument('--attack', type=str, default='LPA', help="name of attack")
+    parser.add_argument('--attack_frac', type=int, default=0.2, help="frac of attack")
+    parser.add_argument('--attack_begin', type=float, default=5, help="the begin epoch of attack")
+    parser.add_argument('--attack_label', type=str, default='7', help="the label of attack")
+    parser.add_argument('--trigger', type=str, default='pattern', help="the trigger type of attack")
+    parser.add_argument('--triggerY', type=int, default=0, help="the label of trigger")
+    parser.add_argument('--triggerX', type=int, default=0, help="the label of trigger")
+
+
+    # defnsese arguments
+    parser.add_argument('--defense', type=str, default='bcfreeze', help="name of defense")
+    parser.add_argument('--noise_scale', type=float, default=0.001, help="scale of noise")
     args = parser.parse_args()
     return args

@@ -13,10 +13,11 @@ import torch
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid
 from utils.options import args_parser
 from models.Update import LocalUpdate
-from models.Nets import MLP, CNNMnist, CNNCifar
+from models.Nets import MLP, CNNMnist, CNNCifar, ResNet, ResNet18
 from models.Fed import FedAvg
+from models.bcfreeze import bcfreeze
 from models.test import test_img
-
+import random
 
 if __name__ == '__main__':
     # parse args
@@ -50,6 +51,8 @@ if __name__ == '__main__':
         net_glob = CNNCifar(args=args).to(args.device)
     elif args.model == 'cnn' and args.dataset == 'mnist':
         net_glob = CNNMnist(args=args).to(args.device)
+    elif args.model == 'resnet' and args.dataset == 'cifar':
+        net_glob = ResNet18().to(args.device)
     elif args.model == 'mlp':
         len_in = 1
         for x in img_size:
@@ -74,6 +77,19 @@ if __name__ == '__main__':
     if args.all_clients: 
         print("Aggregation over all clients")
         w_locals = [w_glob for i in range(args.num_users)]
+    # layers_list = []
+    # for key in w_glob.keys():
+    #     if 'weight' in key:
+    #         layers_list.append(key)
+    # args.bc_layers = random.sample(layers_list, int(len(layers_list) * 0.5))
+
+    if args.attack == 'LPA':
+        layers_list = []
+        for key in w_glob.keys():
+            if 'weight' in key:
+                layers_list.append(key)
+        args.bc_layers = random.sample(layers_list, int(len(layers_list) * 0.5))
+
     for iter in range(args.epochs):
         loss_locals = []
         if not args.all_clients:
@@ -82,14 +98,28 @@ if __name__ == '__main__':
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
         for idx in idxs_users:
             local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx])
-            w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
-            if args.all_clients:
-                w_locals[idx] = copy.deepcopy(w)
+            attack_probability = args.attack_frac
+            samples = ['good', 'bad']
+
+            # 使用 random.choices 来选择样本，设置权重
+            selected_sample = random.choices(samples, weights=[1 - attack_probability, attack_probability])[0]
+
+            if args.attack == 'LPA' and selected_sample == 'bad':
+                w, loss = local.train_attack(net=copy.deepcopy(net_glob).to(args.device), args=args)
             else:
-                w_locals.append(copy.deepcopy(w))
-            loss_locals.append(copy.deepcopy(loss))
+                w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
+                if args.all_clients:
+                    w_locals[idx] = copy.deepcopy(w)
+                else:
+                    w_locals.append(copy.deepcopy(w))
+                loss_locals.append(copy.deepcopy(loss))
         # update global weights
-        w_glob = FedAvg(w_locals)
+        if args.defense == 'bcfreeze':
+            w_glob = bcfreeze(w_locals, net_glob, args)
+        elif args.defense == 'avg':
+            w_glob = FedAvg(w_locals)
+        else:
+            w_glob = FedAvg(w_locals)
 
         # copy weight to net_glob
         net_glob.load_state_dict(w_glob)
