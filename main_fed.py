@@ -92,6 +92,8 @@ if __name__ == '__main__':
         print("Attack on layers: ", args.bc_layers)
 
     for iter in range(args.epochs):
+        w_glob = net_glob.state_dict()
+
         loss_locals = []
         if not args.all_clients:
             w_locals = []
