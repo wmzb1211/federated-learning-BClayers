@@ -40,4 +40,4 @@ def bcfreeze(w_locals, net_glob, args):
         else:
             print("Average layer: ", key)
             w_glob[key] = fedavg_layers(w_locals_k, w_glob_k)
-    return w_glob.cuda()
+    return w_glob

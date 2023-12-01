@@ -121,7 +121,7 @@ if __name__ == '__main__':
             w_glob = FedAvg(w_locals)
         else:
             w_glob = FedAvg(w_locals)
-
+        w_glob.cuda()
         # copy weight to net_glob
         net_glob.load_state_dict(w_glob)
 
