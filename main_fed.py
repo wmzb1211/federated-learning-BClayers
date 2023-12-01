@@ -115,6 +115,7 @@ if __name__ == '__main__':
                 w_locals.append(copy.deepcopy(w))
             loss_locals.append(copy.deepcopy(loss))
         # update global weights
+        print("Training over, start aggregation and defense")
         if args.defense == 'bcfreeze':
             w_glob = bcfreeze(w_locals, net_glob, args)
         elif args.defense == 'avg':
