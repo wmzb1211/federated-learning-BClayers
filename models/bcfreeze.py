@@ -32,7 +32,7 @@ def bcfreeze(w_locals, net_glob, args):
     w_glob = net_glob.state_dict()
     print("num of len w_locals: ", len(w_locals))
     for key in w_glob.keys():
-        w_locals_k = [w_local[key].reshape(-1).cpu() for w_local in w_locals]
+        w_locals_k = [w_local[key].cpu() for w_local in w_locals]
         w_glob_k = w_glob[key].cpu()
         if key in args.bc_layers:
             print("Freeze layer: ", key)
