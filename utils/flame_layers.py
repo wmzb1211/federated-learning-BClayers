@@ -32,7 +32,7 @@ def flame_layers(w_locals_k_: list, args):
     w_locals_k_total_temp = w_locals_k_total.double()
     print("w_locals_k_total_temp.shape: ", w_locals_k_total_temp.shape)
     # w_locals_k_total_temp = np.array(w_locals_k_total_temp, dtype=np.double)
-    print('cos_list: ', cos_list)
+    # print('cos_list: ', cos_list)
     clusterer.fit(cos_list)
     print("clusterer.labels_: ", clusterer.labels_)
     benign_cluster = []
