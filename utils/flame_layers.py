@@ -18,7 +18,7 @@ def flame_layers(w_locals_k_: list, args):
         w_locals_k.append(w_locals_k_[i].reshape(-1))
     clusterer = hdbscan.HDBSCAN(metric="cosine", algorithm='generic', min_cluster_size=num_clients // 2 + 1, min_samples=1, allow_single_cluster=True)
     w_locals_k_total = torch.stack(w_locals_k)
-    small_value = 0.000000001
+    small_value = 0.00001
     w_locals_k_total = w_locals_k_total + small_value
     w_locals_k_total_temp = w_locals_k_total.double()
     print("w_locals_k_total_temp.shape: ", w_locals_k_total_temp.shape)
