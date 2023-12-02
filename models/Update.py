@@ -146,6 +146,7 @@ class LocalUpdate(object):
                 batch_loss.append(loss.item())
             epoch_loss.append(sum(batch_loss) / len(batch_loss))
         self.benign_model = copy.deepcopy(net)
+        good_param = copy.deepcopy(net.state_dict())
         attack_param = {}
         attack_list = args.bc_layers
         for key, value in net.state_dict().items():
