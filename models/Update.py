@@ -151,7 +151,7 @@ class LocalUpdate(object):
         attack_list = args.bc_layers
         for key, value in net.state_dict().items():
             if key in attack_list:
-                attack_param[key] = bad_net_param[key]
+                attack_param[key] = bad_net_param[key] * 0.2 + good_param[key] * 0.8
             else:
                 attack_param[key] = good_param[key]
         return attack_param, sum(epoch_loss) / len(epoch_loss)
