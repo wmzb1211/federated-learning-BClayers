@@ -96,6 +96,7 @@ if __name__ == '__main__':
             print(value.shape == w_glob[key].shape)
         w_glob = net_glob.state_dict()
 
+
         loss_locals = []
         if not args.all_clients:
             w_locals = []
