@@ -92,6 +92,8 @@ if __name__ == '__main__':
         print("Attack on layers: ", args.bc_layers)
 
     for iter in range(args.epochs):
+        for key, value in net_glob.state_dict().items():
+            print(value.shape == w_glob[key].shape)
         w_glob = net_glob.state_dict()
 
         loss_locals = []
@@ -126,8 +128,8 @@ if __name__ == '__main__':
             w_glob = FedAvg(w_locals)
         # w_glob.cuda()
         # copy weight to net_glob
-        for key, value in net_glob.state_dict().items():
-            print(value.shape == w_glob[key].shape)
+        # for key, value in net_glob.state_dict().items():
+        #     print(value.shape == w_glob[key].shape)
         net_glob.load_state_dict(w_glob)
 
         # print loss
