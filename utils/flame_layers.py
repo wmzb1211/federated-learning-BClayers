@@ -17,7 +17,7 @@ def flame_layers(w_locals_k_: list, args):
     num_clients = len(w_locals_k_)
     w_locals_k = []
     for i in range(num_clients):
-        w_locals_k.append(w_locals_k_[i].reshape(-1))
+        w_locals_k.append(w_locals_k_[i].reshape(-1).cpu())
     clusterer = hdbscan.HDBSCAN(metric="cosine", algorithm='generic', min_cluster_size=num_clients // 2 + 1, max_cluster_size= int(num_clients * 3 / 4)  ,min_samples=1, allow_single_cluster=True)
     # for i in range(num_clients):
     #     cos_i = []
