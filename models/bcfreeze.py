@@ -30,6 +30,9 @@ def bcfreeze(w_locals, net_glob, args):
     :return:
     '''
     w_glob = net_glob.state_dict()
+    for i in range(len(w_locals)):
+        for key, value in w_locals[i].items():
+            w_locals[i][key] = value - w_glob[key]
     print("num of len w_locals: ", len(w_locals))
     for key in w_glob.keys():
         w_locals_k = [w_local[key].cpu() for w_local in w_locals]
