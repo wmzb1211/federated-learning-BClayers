@@ -24,6 +24,7 @@ def flame_layers(w_locals_k_: list, args):
     print("w_locals_k_total_temp.shape: ", w_locals_k_total_temp.shape)
     # w_locals_k_total_temp = np.array(w_locals_k_total_temp, dtype=np.double)
     clusterer.fit(w_locals_k_total_temp)
+    print("clusterer.labels_: ", clusterer.labels_)
     benign_cluster = []
     if clusterer.labels_.max() < 0:
         raise ValueError("No cluster found")
