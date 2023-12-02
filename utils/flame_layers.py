@@ -12,20 +12,20 @@ def flame_layers(w_locals_k_: list, args):
     :return: 聚类+剪枝+加噪声后进行聚合的第k层参数，以state_dict的形式存储
     '''
     # 1.cosine similarity hdbscan clustering
-    cos = torch.nn.CosineSimilarity(dim=0, eps=1e-6).cuda()
-    cos_list = []
+    # cos = torch.nn.CosineSimilarity(dim=0, eps=1e-6).cuda()
+    # cos_list = []
     num_clients = len(w_locals_k_)
     w_locals_k = []
     for i in range(num_clients):
         w_locals_k.append(w_locals_k_[i].reshape(-1))
-    # clusterer = hdbscan.HDBSCAN(metric="cosine", algorithm='generic', min_cluster_size=num_clients // 2 + 1, max_cluster_size= int(num_clients * 3 / 4)  ,min_samples=1, allow_single_cluster=True)
-    for i in range(num_clients):
-        cos_i = []
-        for j in range(num_clients):
-            cos_ij = cos(w_locals_k[i], w_locals_k[j])
-            cos_i.append(cos_ij.item())
-        cos_list.append(cos_i)
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=num_clients // 2 + 1, max_cluster_size= int(num_clients * 3 / 4)  ,min_samples=1, allow_single_cluster=True)
+    clusterer = hdbscan.HDBSCAN(metric="cosine", algorithm='generic', min_cluster_size=num_clients // 2 + 1, max_cluster_size= int(num_clients * 3 / 4)  ,min_samples=1, allow_single_cluster=True)
+    # for i in range(num_clients):
+    #     cos_i = []
+    #     for j in range(num_clients):
+    #         cos_ij = cos(w_locals_k[i], w_locals_k[j])
+    #         cos_i.append(cos_ij.item())
+    #     cos_list.append(cos_i)
+    # clusterer = hdbscan.HDBSCAN(min_cluster_size=num_clients // 2 + 1, max_cluster_size= int(num_clients * 3 / 4)  ,min_samples=1, allow_single_cluster=True)
     w_locals_k_total = torch.stack(w_locals_k)
     small_value = 0.00001
     w_locals_k_total = w_locals_k_total + small_value
@@ -33,7 +33,8 @@ def flame_layers(w_locals_k_: list, args):
     print("w_locals_k_total_temp.shape: ", w_locals_k_total_temp.shape)
     # w_locals_k_total_temp = np.array(w_locals_k_total_temp, dtype=np.double)
     # print('cos_list: ', cos_list)
-    clusterer.fit(cos_list)
+    # clusterer.fit(cos_list)
+    clusterer.fit(w_locals_k_total_temp)
     print("clusterer.labels_: ", clusterer.labels_)
     benign_cluster = []
     if clusterer.labels_.max() < 0:
