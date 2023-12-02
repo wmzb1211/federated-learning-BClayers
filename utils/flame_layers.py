@@ -42,6 +42,7 @@ def flame_layers(w_locals_k_: list, args):
         for i in range(len(clusterer.labels_)):
             if clusterer.labels_[i] > 0:
                 benign_cluster.append(i)
+    print("benign_cluster: ", benign_cluster)
     # 2.剪枝
     # 计算每个benign_cluster的每个参数的平均值
     norm_list = []
@@ -53,8 +54,8 @@ def flame_layers(w_locals_k_: list, args):
         w_locals_k_[b_layer] = w_locals_k_[b_layer] * (clip_vlaue / torch.norm(w_locals_k_[b_layer]))
 
     # 先聚合
-    glob_layer = torch.zeros_like(w_locals_k_[0])
-    for i in benign_cluster:
+    glob_layer = w_locals_k_[benign_cluster[0]]
+    for i in benign_cluster[1:]:
         temp = w_locals_k_[i]
         glob_layer += temp
     glob_layer = glob_layer / len(benign_cluster)
