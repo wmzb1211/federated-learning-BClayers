@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import hdbscan
 import sklearn
-def flame_layers(w_locals_k_: list, w_glob_k: dict, args):
+def flame_layers(w_locals_k_: list, args):
     '''
     :param w_locals_k: 待聚合的本地模型参数的第k层，以state_dict的形式存储
     :param w_glob_k: global model参数的第k层，以state_dict的形式存储
