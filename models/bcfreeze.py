@@ -35,12 +35,13 @@ def bcfreeze(w_locals, net_glob, args):
     #     for key, value in w_locals[i].items():
     #         w_locals[i][key] = value - w_glob[key]
     print("num of len w_locals: ", len(w_locals))
+    print("w_locals:", w_locals[0])
     for key in w_glob.keys():
-        w_locals_k = [w_local[key].cpu() for w_local in w_locals]
-        w_glob_k = w_glob[key].cpu()
+        w_locals_k = [w_local[key] for w_local in w_locals]
+        w_glob_k = w_glob[key]
         if key in args.bc_layers:
             print("Freeze layer: ", key)
-            print("w_locals_k: ", w_locals_k)
+            # print("w_locals_k: ", w_locals_k)
             w_glob[key] = flame_layers(w_locals_k, args)
             # w_glob[key] = fedavg_layers(w_locals_k, w_glob_k)
 
