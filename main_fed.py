@@ -110,7 +110,7 @@ if __name__ == '__main__':
             # 使用 random.choices 来选择样本，设置权重
             selected_sample = random.choices(samples, weights=[1 - attack_probability, attack_probability])[0]
 
-            if args.attack == 'LPA' and selected_sample == 'bad':
+            if args.attack == 'LPA' and selected_sample == 'bad' and iter > 3:
                 w, loss = local.train_attack(net=copy.deepcopy(net_glob).to(args.device), args=args)
             else:
                 w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             loss_locals.append(copy.deepcopy(loss))
         # update global weights
         print("Training over, start aggregation and defense")
-        if args.defense == 'bcfreeze' and iter % 2 == 1:
+        if args.defense == 'bcfreeze':
             w_glob = bcfreeze(w_locals, net_glob, args)
         elif args.defense == 'avg':
             w_glob = FedAvg(w_locals)
