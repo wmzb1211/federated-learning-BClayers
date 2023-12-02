@@ -100,5 +100,6 @@ def test_img(net_g, datatest, args, test_backdoor=False):
             test_loss, correct, len(data_loader.dataset), accuracy))
     if test_backdoor:
         back_accu = 100.00 * float(back_correct) / back_num
+        print('backdoor correct: ', back_correct, 'backdoor num: ', back_num)
         return accuracy, test_loss, back_accu
     return accuracy, test_loss
