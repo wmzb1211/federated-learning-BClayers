@@ -40,7 +40,7 @@ def flame_layers(w_locals_k_: list, args):
         raise ValueError("No cluster found")
     else:
         for i in range(len(clusterer.labels_)):
-            if clusterer.labels_[i] > 0:
+            if clusterer.labels_[i] >= 0:
                 benign_cluster.append(i)
     print("benign_cluster: ", benign_cluster)
     # 2.剪枝
