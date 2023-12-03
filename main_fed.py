@@ -102,6 +102,7 @@ if __name__ == '__main__':
             w_locals = []
         m = max(int(args.frac * args.num_users), 1)
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
+        users = []
         for idx in idxs_users:
             local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx])
             attack_probability = args.attack_frac
@@ -111,8 +112,10 @@ if __name__ == '__main__':
             selected_sample = random.choices(samples, weights=[1 - attack_probability, attack_probability])[0]
 
             if args.attack == 'LPA' and selected_sample == 'bad' :
+                users.append(-1)
                 w, loss = local.train_attack(net=copy.deepcopy(net_glob).to(args.device), args=args)
             else:
+                users.append(0)
                 w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
             if args.all_clients:
                 w_locals[idx] = copy.deepcopy(w)
@@ -121,6 +124,7 @@ if __name__ == '__main__':
             loss_locals.append(copy.deepcopy(loss))
         # update global weights
         print("Training over, start aggregation and defense")
+        print("Users: ", users)
         if args.defense == 'bcfreeze':
             w_glob = bcfreeze(w_locals, net_glob, args)
         elif args.defense == 'avg':
